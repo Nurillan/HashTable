@@ -16,10 +16,10 @@ namespace HashTable
         static string initPath = Application.StartupPath + "\\Files";
 
         FileInfo currentFile;
-        List<CarRecord> records;
+        HashTable table;
 
-        bool ListIsChanged;
-        bool ListIsExist;
+        bool TableIsChanged;
+        bool TableIsExist;
         
         public MainForm()
         {
@@ -35,21 +35,21 @@ namespace HashTable
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ListIsExist)
+            if (TableIsExist)
             {
-                if (!DeleteList())
+                if (!DeleteTable())
                     return;
             }
-            CreateNewList();
+            CreateNewTable();
 
             CarRecord toy1 = new CarRecord(CarBrand.Daihatsu, new Person("aa", "aa", "aa"), new CarNumber("aaa", "111", "111"));
-            records.Add(toy1);
+            table.Add(toy1);
             toy1 = new CarRecord(CarBrand.Daihatsu, new Person("bb", "bb", "bb"), new CarNumber("vvv", "222", "22"));
-            records.Add(toy1);
+            table.Add(toy1);
             toy1 = new CarRecord(CarBrand.Daihatsu, new Person("vv", "vv", "vv"), new CarNumber("xxx", "333", "33"));
-            records.Add(toy1);
+            table.Add(toy1);
             toy1 = new CarRecord(CarBrand.Daihatsu, new Person("ss", "ss", "ss"), new CarNumber("ccc", "444", "44"));
-            records.Add(toy1);
+            table.Add(toy1);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -58,7 +58,7 @@ namespace HashTable
                 if (!GetSaveDialog())
                     return;
             SaveList();
-            ListIsChanged = false;
+            TableIsChanged = false;
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -66,7 +66,7 @@ namespace HashTable
             if (!GetSaveDialog())
                 return;
             SaveList();
-            ListIsChanged = false;
+            TableIsChanged = false;
         }
 
         private bool GetSaveDialog()
@@ -79,8 +79,8 @@ namespace HashTable
 
         private void SaveList()
         {
-            IToyListService saveList = ServiceFactory.getService(currentFile.Extension);
-            saveList.Save(records, currentFile.FullName);
+            IHashTableService saveList = ServiceFactory.getService(currentFile.Extension);
+            table.SaveToFile(currentFile);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -88,101 +88,95 @@ namespace HashTable
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
 
-            if (ListIsExist)
+            if (TableIsExist)
             {
-                if (!DeleteList())
+                if (!DeleteTable())
                     return;
             }
-            CreateNewList(openFileDialog.FileName);
+            CreateNewTable(openFileDialog.FileName);
 
-            IToyListService loadList = ServiceFactory.getService(currentFile.Extension);
-            records = loadList.Load(currentFile.FullName);
+            IHashTableService loadList = ServiceFactory.getService(currentFile.Extension);
+            table.LoadFromFile(currentFile);
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            records.Clear();
+            table.Clear();
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteList();
+            DeleteTable();
         }
 
         //buttons on form
 
         private void btnAdd_Click(object sender, EventArgs e)
         {           
-            FormRecordMake formToy = new FormRecordMake();
-            if (formToy.ShowDialog() == DialogResult.OK)
+            FormRecordMake formRecordMake = new FormRecordMake();
+            if (formRecordMake.ShowDialog() == DialogResult.OK)
             {
-                records.Add(formToy.record);
-                ListIsChanged = true;
+                table.Add(formRecordMake.record);
+                TableIsChanged = true;
             }
         }
 
         private void btnChange_Click(object sender, EventArgs e)
         {
-            int i = GetSelectedToyIndex();
-            if (i == -1)
+            CarRecord record = GetSelectedRecord();
+            if (record is null)
                 return;
             
-            FormRecordMake formToy = new FormRecordMake(records[i]);
-            if (formToy.ShowDialog() == DialogResult.OK)
+            FormRecordMake formRecordMake = new FormRecordMake(record);
+            if (formRecordMake.ShowDialog() == DialogResult.OK)
             {
-                records[i] = formToy.record;
-                ListIsChanged = true;
+                table.Delete(table.GetKey(record));
+                record = formRecordMake.record;
+                table.Add(record);
+                TableIsChanged = true;
             }
             
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            int i = GetSelectedToyIndex();
-            if (i != -1)
-            {
-                records.RemoveAt(i);
-                ListIsChanged = true;
-            }
+            CarRecord record = GetSelectedRecord();
+            if (record is null)
+                return;
+            table.Delete(table.GetKey(record));
+            TableIsChanged = true;
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             dataGridView.DataSource = null;
-            dataGridView.DataSource = records;
+            dataGridView.DataSource = table.GetRecordsToList();
         }
 
         //main task
 
-        private void selectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           /* SelectForm selectForm = new SelectForm(records);
-            if (selectForm.ShowDialog() == DialogResult.OK)
-            {
-                List<CarRecord> selectedToys = selectForm.resultToys;
-                ToysListHelper toys = new ToysListHelper(this.records);
-                unselectedToys = toys.ListDif(selectedToys);
-                this.records = selectedToys;
-
-                selectToolStripMenuItem.Click -= selectToolStripMenuItem_Click;
-                selectToolStripMenuItem.Click += returnAllToyToGrid;
-                selectToolStripMenuItem.Text = "Return";
-
-            }*/
+            FindForm findForm = new FindForm();
+            if (findForm.ShowDialog() == DialogResult.Cancel)
+                return;
+            CarNumber number = findForm.resultNumber;
+            CarRecord record = table.Find(number);
+            string mes = record == null ? "The record hadn't been found" : record.ToString();
+            MessageBox.Show(mes, "Record search", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         //auxiliary
 
-        int GetSelectedToyIndex()
+        CarRecord GetSelectedRecord()
         {
             if (dataGridView.SelectedRows.Count != 1)
-                throw new Exception("Only one field have to be selected");
+                return null;
 
-            CarRecord toy = (CarRecord)dataGridView.SelectedRows[0].DataBoundItem;
-            return records.IndexOf(toy);
+            return (CarRecord)dataGridView.SelectedRows[0].DataBoundItem;
         }
 
-        void CreateNewList(string fileName = null)
+        void CreateNewTable(string fileName = null)
         {
             InitFields();
             if (fileName != null)
@@ -190,9 +184,9 @@ namespace HashTable
             ButtonsToggle(true);
         }
 
-        bool DeleteList()
+        bool DeleteTable()
         {
-            if (ListIsChanged)
+            if (TableIsChanged)
                 if (!ApproveDeletingModified())
                     return false;
             
@@ -225,15 +219,15 @@ namespace HashTable
 
         private void InitFields()
         {
-            records = new List<CarRecord>();
-            ListIsChanged = false;
-            ListIsExist = true;
+            table = new HashTable();
+            TableIsChanged = false;
+            TableIsExist = true;
         }
 
         private void ClearFields()
         {
-            records = null;
-            ListIsExist = false;
+            table = null;
+            TableIsExist = false;
             currentFile = null;
         }
 
@@ -243,7 +237,7 @@ namespace HashTable
             btnChange.Enabled = flag;
             btnDelete.Enabled = flag;
             btnRefresh.Enabled = flag;
-            selectToolStripMenuItem.Enabled = flag;
+            findToolStripMenuItem.Enabled = flag;
             saveToolStripMenuItem.Enabled = flag;
             saveAsToolStripMenuItem.Enabled = flag;
             clearToolStripMenuItem.Enabled = flag;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTable
 {
+    [Serializable]
     public class Person: IComparable<Person>
     {
         public string Name { get; private set; }

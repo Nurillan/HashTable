@@ -31,7 +31,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnDone = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.tbCarNumber = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -41,6 +40,7 @@
             this.tbSurname = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tbPatronymic = new System.Windows.Forms.TextBox();
+            this.mtbCarNumber = new System.Windows.Forms.MaskedTextBox();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -74,15 +74,6 @@
             this.label1.Size = new System.Drawing.Size(81, 20);
             this.label1.TabIndex = 3;
             this.label1.Text = "Car Brand";
-            // 
-            // tbCarNumber
-            // 
-            this.tbCarNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbCarNumber.Location = new System.Drawing.Point(127, 68);
-            this.tbCarNumber.Name = "tbCarNumber";
-            this.tbCarNumber.Size = new System.Drawing.Size(125, 22);
-            this.tbCarNumber.TabIndex = 4;
-            this.tbCarNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tbName
             // 
@@ -169,11 +160,22 @@
             this.tbPatronymic.Size = new System.Drawing.Size(171, 26);
             this.tbPatronymic.TabIndex = 12;
             // 
+            // mtbCarNumber
+            // 
+            this.mtbCarNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mtbCarNumber.Location = new System.Drawing.Point(127, 70);
+            this.mtbCarNumber.Mask = "L000LL (000)";
+            this.mtbCarNumber.Name = "mtbCarNumber";
+            this.mtbCarNumber.Size = new System.Drawing.Size(125, 26);
+            this.mtbCarNumber.TabIndex = 14;
+            this.mtbCarNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // FormRecordMake
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(317, 314);
+            this.Controls.Add(this.mtbCarNumber);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.tbPatronymic);
             this.Controls.Add(this.label5);
@@ -183,7 +185,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tbName);
-            this.Controls.Add(this.tbCarNumber);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnDone);
             this.Controls.Add(this.btnCancel);
@@ -201,7 +202,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnDone;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbCarNumber;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
@@ -211,5 +211,6 @@
         private System.Windows.Forms.TextBox tbSurname;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbPatronymic;
+        private System.Windows.Forms.MaskedTextBox mtbCarNumber;
     }
 }

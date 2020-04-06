@@ -30,8 +30,8 @@ namespace HashTable
 
             if (record != null)
             {
-                cbCarBrand.SelectedIndex = (int)record.Brand;
-                tbCarNumber.Text = record.Number.ToString();
+                cbCarBrand.SelectedIndex = (int)record.Brand - 1;
+                mtbCarNumber.Text = record.Number.ToString();
                 tbName.Text = record.Person.Name;
                 tbSurname.Text = record.Person.Surname;
                 tbPatronymic.Text = record.Person.Patronymic;
@@ -46,23 +46,33 @@ namespace HashTable
 
         private void btnDone_Click(object sender, EventArgs e)
         {
+            
+            if (!checkMtb() || (tbName.Text.Trim() == "") || 
+                (tbSurname.Text.Trim() == "") || (tbPatronymic.Text.Trim() == ""))
+            {
+                MessageBox.Show("Fill the gaps", "Status", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             int selectedBrand = cbCarBrand.SelectedIndex + 1;
             CarBrand brand = CarBrandClass.CarBrandDict[selectedBrand];
             Person person = new Person(tbName.Text.Trim(), tbSurname.Text.Trim(), tbPatronymic.Text.Trim());
-            CarNumber number = MakeCarNumber();
+            CarNumber number = new CarNumber(mtbCarNumber.Text);
 
             this.record = new CarRecord(brand, person, number);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private CarNumber MakeCarNumber()
+        private bool checkMtb()
         {
-            string text = tbCarNumber.Text;
-            string letters = text[0].ToString() + text[4] + text[5];
-            string num = text.Substring(1, 3);
-            string region = text.Substring(text.IndexOf('(')).Remove(text.Length - 1);
-            return new CarNumber(letters, num, region);
+            mtbCarNumber.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            string text = mtbCarNumber.Text;
+            if (text.Length < 9)
+                return false;
+            bool flag = true;
+            for(int i = 0; i < text.Length && flag == true; i ++)
+                flag = text[i] != ' ';
+            return flag;
         }
     }
 }

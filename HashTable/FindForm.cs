@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace HashTable
 {
-    public partial class SelectForm : Form
+    public partial class FindForm : Form
     {
-        public List<CarRecord> resultToys;
+        public CarNumber resultNumber;
 
-        public SelectForm(List<CarRecord> toys)
+        public FindForm()
         {          
             InitializeComponent();
         }
@@ -27,30 +27,26 @@ namespace HashTable
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            if (!checkFields())
+            if (!checkMtb())
             {
-                MessageBox.Show("Price must be positive number\nAge must be between 0 and 100", "Inappropriate data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Fill the gaps", "Status", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            byte minAge = byte.Parse(tbAge.Text);
-            int maxPrice = int.Parse(tbPrice.Text);
+            resultNumber = new CarNumber(mtbCarNumber.Text);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private bool checkFields()
+        private bool checkMtb()
         {
-            try
-            {                
-                byte age = byte.Parse(tbAge.Text);
-                double price = double.Parse(tbPrice.Text);
-                return (age >= 0 && age <= 100 && price >= 0);
-            }
-            catch
-            {
+            mtbCarNumber.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            string text = mtbCarNumber.Text;
+            if (text.Length < 9)
                 return false;
-            }
+            bool flag = true;
+            for (int i = 0; i < text.Length && flag == true; i++)
+                flag = text[i] != ' ';
+            return flag;
         }
     }
 }

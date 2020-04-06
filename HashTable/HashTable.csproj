@@ -54,12 +54,12 @@
     </Compile>
     <Compile Include="HashTable.cs" />
     <Compile Include="Person.cs" />
-    <Compile Include="ToyListService.cs" />
-    <Compile Include="SelectForm.cs">
+    <Compile Include="HashTableService.cs" />
+    <Compile Include="FindForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectForm.Designer.cs">
-      <DependentUpon>SelectForm.cs</DependentUpon>
+    <Compile Include="FindForm.Designer.cs">
+      <DependentUpon>FindForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CarRecord.cs" />
     <Compile Include="MainForm.cs">
@@ -87,8 +87,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SelectForm.resx">
-      <DependentUpon>SelectForm.cs</DependentUpon>
+    <EmbeddedResource Include="FindForm.resx">
+      <DependentUpon>FindForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

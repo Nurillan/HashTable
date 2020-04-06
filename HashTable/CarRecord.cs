@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HashTable
 {
-
+    [Serializable]
     public struct CarNumber
     {
         public string letters { get; private set; }
@@ -18,6 +18,13 @@ namespace HashTable
             this.letters = letters;
             this.num = num;
             this.region = region;
+        }
+
+        public CarNumber(string str)
+        {
+            letters = str[0].ToString() + str[4] + str[5];
+            num = str[1].ToString() + str[2] + str[3];
+            region = str[6].ToString() + str[7] + str[8];
         }
 
         public override string ToString()
@@ -34,31 +41,30 @@ namespace HashTable
     [Serializable]
     public class CarRecord : IComparable<CarRecord>
     {
-        public CarBrand Brand { get; }
+        public CarBrand Brand { get; private set; }
         public Person Person { get; private set; } 
-        public CarNumber Number { get; private set; }      
+        public CarNumber Number { get; private set; }
 
-        public CarRecord(CarBrand type, Person person, CarNumber number)
+        public CarRecord(CarBrand brand, Person person, CarNumber number)
         {
-            Brand = type;
+            Brand = brand;
             Person = person;
             Number = number;
         }
 
-        public override string ToString()
+        public override string ToString()//<Brand> l999ll (999); Owner <N> <S> <P>
         {
-            string result = Brand.ToString() + " ";
-            result += Number.ToString() + Environment.NewLine;
-            result += "Owner: " + Person.ToString() + ".";
+            string result = Brand.ToString() + " " + Number.ToString() + "; " +
+                            "Owner: " + Person.ToString() + ".";
             return result;
         }
 
         public int CompareTo(CarRecord other)
         {
-            int result = 0;
+            int result;
             result = this.Person.CompareTo(other.Person) * 10;
-            result = this.Brand.CompareTo(other.Brand) * 10;
-            result = this.Number.CompareTo(other.Number) * 10;
+            result += this.Brand.CompareTo(other.Brand) * 10;
+            result += this.Number.CompareTo(other.Number) * 10;
             return result;
         }
 
