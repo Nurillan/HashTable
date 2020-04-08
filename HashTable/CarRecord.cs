@@ -24,7 +24,7 @@ namespace HashTable
         {
             letters = str[0].ToString() + str[4] + str[5];
             num = str[1].ToString() + str[2] + str[3];
-            region = str[6].ToString() + str[7] + str[8];
+            region = str[8].ToString() + str[9] + str[10];
         }
 
         public override string ToString()

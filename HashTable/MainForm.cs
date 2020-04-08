@@ -89,16 +89,19 @@ namespace HashTable
 
             IHashTableService loadList = ServiceFactory.getService(currentFile.Extension);
             table.LoadFromFile(currentFile);
+            GridRefresh();
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             table.Clear();
+            GridRefresh();
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteTable();
+            GridRefresh();
         }
 
         //buttons on form
@@ -167,6 +170,7 @@ namespace HashTable
             table.Add(record);
             record = new CarRecord(CarBrand.Daihatsu, new Person("ss", "ss", "ss"), new CarNumber("ccc", "444", "444"));
             table.Add(record);
+            GridRefresh();
         }
 
         CarRecord GetSelectedRecord()

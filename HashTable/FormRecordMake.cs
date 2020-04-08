@@ -72,6 +72,7 @@ namespace HashTable
             bool flag = true;
             for(int i = 0; i < text.Length && flag == true; i ++)
                 flag = text[i] != ' ';
+            mtbCarNumber.TextMaskFormat = MaskFormat.IncludePromptAndLiterals;
             return flag;
         }
     }
