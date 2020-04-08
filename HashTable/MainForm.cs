@@ -41,15 +41,7 @@ namespace HashTable
                     return;
             }
             CreateNewTable();
-
-            CarRecord toy1 = new CarRecord(CarBrand.Daihatsu, new Person("aa", "aa", "aa"), new CarNumber("aaa", "111", "111"));
-            table.Add(toy1);
-            toy1 = new CarRecord(CarBrand.Daihatsu, new Person("bb", "bb", "bb"), new CarNumber("vvv", "222", "22"));
-            table.Add(toy1);
-            toy1 = new CarRecord(CarBrand.Daihatsu, new Person("vv", "vv", "vv"), new CarNumber("xxx", "333", "33"));
-            table.Add(toy1);
-            toy1 = new CarRecord(CarBrand.Daihatsu, new Person("ss", "ss", "ss"), new CarNumber("ccc", "444", "44"));
-            table.Add(toy1);
+            GenerateTestData();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -118,6 +110,7 @@ namespace HashTable
             {
                 table.Add(formRecordMake.record);
                 TableIsChanged = true;
+                GridRefresh();
             }
         }
 
@@ -134,6 +127,7 @@ namespace HashTable
                 record = formRecordMake.record;
                 table.Add(record);
                 TableIsChanged = true;
+                GridRefresh();
             }
             
         }
@@ -145,12 +139,7 @@ namespace HashTable
                 return;
             table.Delete(table.GetKey(record));
             TableIsChanged = true;
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            dataGridView.DataSource = null;
-            dataGridView.DataSource = table.GetRecordsToList();
+            GridRefresh();
         }
 
         //main task
@@ -168,11 +157,20 @@ namespace HashTable
 
         //auxiliary
 
+        private void GenerateTestData()
+        {
+            CarRecord record = new CarRecord(CarBrand.Daihatsu, new Person("aa", "aa", "aa"), new CarNumber("aaa", "111", "111"));
+            table.Add(record);
+            record = new CarRecord(CarBrand.Daihatsu, new Person("bb", "bb", "bb"), new CarNumber("vvv", "222", "222"));
+            table.Add(record);
+            record = new CarRecord(CarBrand.Daihatsu, new Person("vv", "vv", "vv"), new CarNumber("xxx", "333", "333"));
+            table.Add(record);
+            record = new CarRecord(CarBrand.Daihatsu, new Person("ss", "ss", "ss"), new CarNumber("ccc", "444", "444"));
+            table.Add(record);
+        }
+
         CarRecord GetSelectedRecord()
         {
-            if (dataGridView.SelectedRows.Count != 1)
-                return null;
-
             return (CarRecord)dataGridView.SelectedRows[0].DataBoundItem;
         }
 
@@ -236,12 +234,17 @@ namespace HashTable
             btnAdd.Enabled = flag;
             btnChange.Enabled = flag;
             btnDelete.Enabled = flag;
-            btnRefresh.Enabled = flag;
             findToolStripMenuItem.Enabled = flag;
             saveToolStripMenuItem.Enabled = flag;
             saveAsToolStripMenuItem.Enabled = flag;
             clearToolStripMenuItem.Enabled = flag;
             closeToolStripMenuItem.Enabled = flag;
+        }
+
+        private void GridRefresh()
+        {
+            dataGridView.DataSource = null;
+            dataGridView.DataSource = table.GetRecordsToList();
         }
 
     }

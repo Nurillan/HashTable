@@ -63,13 +63,12 @@ namespace HashTable
         public static int buidInGetKey(CarRecord record)
         {
             int i = int.Parse(record.Number.region);
-            string s = "";
+            int s = 0;
             foreach (char ch in record.Number.letters)
-                s += ((int)ch).ToString();
-            int j = int.Parse(s);
+                s += ((int)ch);
             int k = int.Parse(record.Number.num);
 
-            return i * k % j;
+            return i * k % s;
         }
 
         int BuildInHashFunction(int key)
